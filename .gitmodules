@@ -1,0 +1,9 @@
+[submodule "lib/FastLED"]
+	path = lib/FastLED
+	url = https://github.com/FastLED/FastLED.git
+[submodule "lib/GyverLibs"]
+	path = lib/GyverLibs
+	url = https://github.com/AlexGyver/GyverLibs.git
+[submodule "lib/EasingLibrary"]
+	path = lib/EasingLibrary
+	url = https://github.com/chrisgervang/EasingLibrary.git
