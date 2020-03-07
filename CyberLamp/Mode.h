@@ -1,7 +1,7 @@
 #pragma once
-#include <FastLED.h>
-
 #include "Constants.h"
+
+#include <FastLED.h>
 
 class Mode {
   protected:

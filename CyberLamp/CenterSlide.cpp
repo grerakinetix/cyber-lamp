@@ -1,5 +1,8 @@
+#pragma once
 #include "Constants.h"
 #include "Transition.h"
+
+#include <Arduino.h>
 
 class CenterSlide : public Transition {
     double previousOffset;

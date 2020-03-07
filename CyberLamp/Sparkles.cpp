@@ -2,8 +2,8 @@
 #include "Constants.h"
 #include "Mode.h"
 
+#include <Arduino.h>
 #include <list>
-
 
 class Sparkles : public Mode {
 	std::list<CRGB *> fadingList;

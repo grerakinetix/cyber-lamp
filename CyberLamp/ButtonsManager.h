@@ -1,8 +1,8 @@
 #pragma once
+#include "Constants.h"
+
 #include <GyverButton.h>
 #include <queue>
-
-#include "Constants.h"
 
 class ButtonsManager {
 	GButton *buttons[BUTTONS_QUANTITY];

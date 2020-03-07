@@ -3,6 +3,8 @@
 #include "Mode.h"
 #include "Transition.h"
 
+#include <Arduino.h>
+
 class LEDManager::BrightnessManager {
     bool active;
 	uint8_t lastBrightness;
@@ -11,6 +13,7 @@ class LEDManager::BrightnessManager {
 	uint64_t beginTime;
 	uint8_t duration;
 
+  public:
 	BrightnessManager();
 	void refresh();
 	void setBrightness(uint8_t, uint16_t = 1000);
@@ -33,14 +36,14 @@ void LEDManager::BrightnessManager::refresh() {
     FastLED.setBrightness(lastBrightness + easingMethod.easeInOut(time));
 }
 
-void LEDManager::BrightnessManager::setBrightness(uint8_t brightness, uint16_t newDuration) {
+void LEDManager::BrightnessManager::setBrightness(uint8_t brightness, uint16_t duration) {
     active = true;
     lastBrightness = FastLED.getBrightness();
     newBrightness = brightness;
-    easingMethod.setDuration(newDuration);
+    easingMethod.setDuration(duration);
     easingMethod.setTotalChangeInPosition(newBrightness - lastBrightness);
     beginTime = millis();
-    duration = newDuration;
+    this->duration = duration;
 }
 
 LEDManager::LEDManager() {
@@ -72,9 +75,5 @@ void LEDManager::refresh(Mode *mode) {
 }
 
 void LEDManager::setBrightness(uint8_t brightness, uint16_t duration) {
-	lastBrightness = FastLED.getBrightness();
-	newBrightness = brightness;
-	brightnessChanger = new CubicEase();
-	brightnessChanger->setDuration(duration);
-	brightnessChanger->setTotalChangeInPosition(brightness - lastBrightness);
+	brightnessManager->setBrightness(brightness, duration);
 }

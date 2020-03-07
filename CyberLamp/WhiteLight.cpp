@@ -2,8 +2,10 @@
 #include "Constants.h"
 #include "Mode.h"
 
+#include <Arduino.h>
+
 class WhiteLight : public Mode {
-	
+
   private:
 	void draw() {
 		float temprature =
@@ -39,11 +41,9 @@ class WhiteLight : public Mode {
 			for (uint16_t j = 0; j < WIDTH; ++j)
 				pixels[i][j].setRGB(red, green, blue);
 	}
-    
+
   public:
-	WhiteLight(uint8_t scale, uint8_t speed) : Mode(scale, speed) {
-		draw();
-	}
+	WhiteLight(uint8_t scale, uint8_t speed) : Mode(scale, speed) { draw(); }
 
 	void setScale(uint8_t newScale) {
 		Mode::setScale(newScale);

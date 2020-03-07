@@ -1,7 +1,7 @@
-#include <ESP8266WiFi.h>
-
 #include "Constants.h"
 #include "Controller.h"
+
+#include <ESP8266WiFi.h>
 
 Controller controller;
 
