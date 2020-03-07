@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.ino": "cpp",
+        "array": "cpp",
+        "*.tcc": "cpp",
+        "random": "cpp",
+        "iomanip": "cpp",
+        "istream": "cpp",
+        "streambuf": "cpp",
+        "functional": "cpp",
+        "list": "cpp"
+    }
+}
