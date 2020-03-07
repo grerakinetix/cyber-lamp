@@ -3,6 +3,7 @@
 #include "Mode.h"
 
 class WhiteLight : public Mode {
+	
   private:
 	void draw() {
 		float temprature =

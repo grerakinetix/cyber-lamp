@@ -10,6 +10,9 @@ class Controller {
 	LEDManager ledManager;
 	Mode *currentMode;
 	ModeID currentModeID;
+	uint8_t currentBrightness;
+	uint8_t currentSpeed;
+	uint8_t currentScale;
 	bool power = false;
 
 	void parseInstruction(Instruction);

@@ -2,6 +2,8 @@
 
 #include "modes.h"
 
+#include <queue>
+
 Mode *initMode(ModeID modeID, uint8_t scale, uint8_t speed) {
 	switch (modeID) {
 		case WHITE_LIGHT:
@@ -11,6 +13,11 @@ Mode *initMode(ModeID modeID, uint8_t scale, uint8_t speed) {
 		default:
 			return new WhiteLight(scale, speed);
 	}
+}
+
+Controller::Controller() {
+    currentModeID = WHITE_LIGHT;
+    currentMode = initMode(currentModeID, 50, 50);
 }
 
 void Controller::parseInstruction(Instruction instruction) {
@@ -45,15 +52,18 @@ void Controller::parseInstruction(Instruction instruction) {
     }
 }
 
-Controller::Controller() {
-    currentModeID = WHITE_LIGHT;
-    currentMode = initMode(currentModeID, 50, 50);
-}
-
 void Controller::tick() {
     buttonsManager.tick();
+    
+    std::queue<Instruction> &pendingOps = buttonsManager.getPendingOps();
+    while (!pendingOps.empty()) {
+        parseInstruction(pendingOps.front());
+        pendingOps.pop();
+    }
+    
+    if (poweredON())
+        ledManager.refresh(currentMode);
 
-    ledManager.refresh(currentMode, nullptr);
 }
 
 void Controller::switchPower() {
@@ -73,9 +83,25 @@ void Controller::previousMode() {
 }
 
 void Controller::increaseBrightness() {
-
+    currentBrightness = currentBrightness << 1 + 1;
 }
 
 void Controller::decreaseBrightness() {
+    currentBrightness >>= 1;
+}
+
+void Controller::increaseSpeed() {
+
+}
+
+void Controller::decreaseSpeed() {
+    
+}
+
+void Controller::increaseScale() {
+
+}
+
+void Controller::decreaseScale() {
     
 }

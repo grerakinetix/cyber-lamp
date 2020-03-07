@@ -1,16 +1,20 @@
 #pragma once
+#include <EasingLibrary.h>
 #include <FastLED.h>
 
 #include "Constants.h"
 
-class Animation;
+class Transition;
 class Mode;
 
 class LEDManager {
+	class BrightnessManager;
+
     CRGB leds[LEDS_QUANTITY];
-    uint8_t brightness = 0;
+	BrightnessManager *brightnessManager;
 
   public:	
     LEDManager();
-    void refresh(Mode *, Animation *);
+    void refresh(Mode *);
+    void setBrightness(uint8_t, uint16_t = 1000);
 };

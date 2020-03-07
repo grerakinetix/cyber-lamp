@@ -49,6 +49,6 @@ void ButtonsManager::tick() {
 #endif
 }
 
-std::queue<Instruction> &ButotnsManager::getPendingOps() {
+std::queue<Instruction> &ButtonsManager::getPendingOps() {
 	return pendingOps;
 }
