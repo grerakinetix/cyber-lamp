@@ -2,6 +2,7 @@
 #include "ButtonsManager.h"
 #include "Constants.h"
 #include "LEDManager.h"
+#include "SmoothValue.h"
 
 class Mode;
 
@@ -10,9 +11,10 @@ class Controller {
 	LEDManager ledManager;
 	Mode *currentMode;
 	ModeID currentModeID;
-	uint8_t currentBrightness;
-	uint8_t currentSpeed;
-	uint8_t currentScale;
+	SmoothValue<uint8_t, SineEase> brightness;
+	SmoothValue<uint8_t, SineEase> speed;
+	SmoothValue<uint8_t, SineEase> scale;
+	uint64_t switchTimeout;
 	bool power = false;
 
 	void parseInstruction(Instruction);

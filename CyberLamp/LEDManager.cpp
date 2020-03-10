@@ -5,47 +5,6 @@
 
 #include <Arduino.h>
 
-class LEDManager::BrightnessManager {
-    bool active;
-	uint8_t lastBrightness;
-	uint8_t newBrightness;
-	LinearEase easingMethod;
-	uint64_t beginTime;
-	uint8_t duration;
-
-  public:
-	BrightnessManager();
-	void refresh();
-	void setBrightness(uint8_t, uint16_t = 1000);
-};
-
-LEDManager::BrightnessManager::BrightnessManager() : beginTime(millis()), duration(0) {}
-
-void LEDManager::BrightnessManager::refresh() {
-    if (!active)
-        return;
-
-    uint64_t time = millis() - beginTime;
-
-    if (time > duration) {
-        FastLED.setBrightness(newBrightness);
-        active = false;
-        return;
-    }
-
-    FastLED.setBrightness(lastBrightness + easingMethod.easeInOut(time));
-}
-
-void LEDManager::BrightnessManager::setBrightness(uint8_t brightness, uint16_t duration) {
-    active = true;
-    lastBrightness = FastLED.getBrightness();
-    newBrightness = brightness;
-    easingMethod.setDuration(duration);
-    easingMethod.setTotalChangeInPosition(newBrightness - lastBrightness);
-    beginTime = millis();
-    this->duration = duration;
-}
-
 LEDManager::LEDManager() {
 	FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, LEDS_QUANTITY);
 #if (CURRENT_LIMIT > 0)
@@ -68,12 +27,16 @@ inline uint32_t getPixelNumber(uint16_t x, uint16_t y) {
 }
 
 void LEDManager::refresh(Mode *mode) {
-	CRGB const(&pixels)[HEIGHT][WIDTH] = mode->getPixels();
+	mode->refresh();
+	auto pixels = mode->getPixels();
+	
 	for (uint16_t y = 0; y < HEIGHT; ++y)
 		for (uint16_t x = 0; x < WIDTH; ++x)
 			leds[getPixelNumber(x, y)] = pixels[y][x];
+
+	FastLED.show();
 }
 
-void LEDManager::setBrightness(uint8_t brightness, uint16_t duration) {
-	brightnessManager->setBrightness(brightness, duration);
+void LEDManager::setBrightness(uint8_t brightness) {
+	FastLED.setBrightness(brightness);
 }
