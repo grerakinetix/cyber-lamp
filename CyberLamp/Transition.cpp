@@ -7,9 +7,8 @@ Transition::Transition(Mode *from, Mode *to, uint16_t duration,
     : Mode(0, 0)
     , from(from)
     , to(to)
-    , beginTime(millis())
-    , duration(duration)
-    , easingMethod(easingMethod) {
+    , easingMethod(easingMethod)
+    , timeout(millis() + duration) {
 	easingMethod->setDuration(duration);
 	easingMethod->setTotalChangeInPosition(255);
 }

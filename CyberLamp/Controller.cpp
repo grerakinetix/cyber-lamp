@@ -4,7 +4,7 @@
 
 #include <queue>
 
-Mode *initMode(ModeID modeID, uint8_t scale, uint8_t speed) {
+Mode *initMode(uint8_t modeID, uint8_t scale, uint8_t speed) {
 	switch (modeID) {
 		case WHITE_LIGHT:
 			return new WhiteLight(scale, speed);
@@ -15,10 +15,17 @@ Mode *initMode(ModeID modeID, uint8_t scale, uint8_t speed) {
 	}
 }
 
-Controller::Controller() : brightness(128), speed(128), scale(128) {
-	currentModeID = WHITE_LIGHT;
-	currentMode =
-	    initMode(currentModeID, speed.getSmoothValue(), scale.getSmoothValue());
+Controller::Controller()
+    : mode(nullptr)
+    , modeID(WHITE_LIGHT)
+    , transition(nullptr)
+    , brightness(128)
+    , speed(128)
+    , scale(128)
+    , switchTimeout(0)
+    , power(false)
+    , poweringOff(false) {
+	// Read values from memory
 }
 
 void Controller::parseInstruction(Instruction instruction) {
@@ -62,41 +69,66 @@ void Controller::tick() {
 		pendingOps.pop();
 	}
 
-	if (switchTimeout && millis() > switchTimeout) {
-		power = false;
+	// Checking whether transition has finished
+	if (transition != nullptr && millis() > switchTimeout) {
+		mode = transition->getDestinationMode();
+		delete transition;
+		transition = nullptr;
 		switchTimeout = 0;
+
+		if (poweringOff) {
+			power = false;
+			poweringOff = false;
+			ledManager.clear();
+		}
 	}
 
 	if (power) {
 		if (brightness.isChanging())
 			ledManager.setBrightness(brightness.getSmoothValue());
 		if (speed.isChanging())
-			currentMode->setSpeed(speed.getSmoothValue());
+			mode->setSpeed(speed.getSmoothValue());
 		if (scale.isChanging())
-			currentMode->setScale(scale.getSmoothValue());
-		ledManager.refresh(currentMode);
+			mode->setScale(scale.getSmoothValue());
+		ledManager.refresh(mode);
 	}
 }
 
 void Controller::switchPower() {
-	currentMode = (power) ?
-	    new CenterSlide(currentMode, nullptr, 1000, new CubicEase()) :
-	    new CenterSlide(nullptr,
-	                    initMode(currentModeID, scale.getSmoothValue(),
-	                             speed.getSmoothValue()),
-	                    1000, new CubicEase());
+	transition = (power) ?
+	    new CenterSlide(mode, nullptr, 1000, new CubicEase()) :
+	    new CenterSlide(
+	        nullptr,
+	        initMode(modeID, scale.getSmoothValue(), speed.getSmoothValue()),
+	        1000, new CubicEase());
+	mode = transition;
 
+	switchTimeout = millis() + 1000;
 	if (power)
-		switchTimeout = millis() + 1000;
+		poweringOff = true;
 
 	power = true;
 }
 
 bool Controller::poweredON() { return power; }
 
-void Controller::nextMode() {}
+void Controller::nextMode() {
+	modeID = (modeID + 1) % LAST_MODE;
+	// TODO: Change transition to LeftSlide
+	transition = new CenterSlide(
+	    mode, initMode(modeID, scale.getSmoothValue(), speed.getSmoothValue()),
+	    1000, new CubicEase());
+	mode = transition;
+}
 
-void Controller::previousMode() {}
+void Controller::previousMode() {
+	modeID = (modeID - 1 + LAST_MODE) % LAST_MODE;
+	// TODO: Change transition to RightSlide
+	transition = new CenterSlide(
+	    mode, initMode(modeID, scale.getSmoothValue(), speed.getSmoothValue()),
+	    1000, new CubicEase());
+	mode = transition;
+}
 
 void Controller::increaseBrightness() {
 	uint8_t temp = brightness.getValue();

@@ -5,7 +5,7 @@
 
 #include <Arduino.h>
 
-LEDManager::LEDManager() {
+LEDManager::LEDManager() : frameTimeout(millis() + FRAME_DURATION) {
 	FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, LEDS_QUANTITY);
 #if (CURRENT_LIMIT > 0)
 	FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
@@ -13,7 +13,6 @@ LEDManager::LEDManager() {
 	FastLED.setBrightness(BRIGHTNESS_LIMIT);
 #endif
 	FastLED.clear();
-	FastLED.show();
 }
 
 inline uint32_t getPixelNumber(uint16_t x, uint16_t y) {
@@ -27,6 +26,12 @@ inline uint32_t getPixelNumber(uint16_t x, uint16_t y) {
 }
 
 void LEDManager::refresh(Mode *mode) {
+	uint64_t time = millis();
+	if (time < frameTimeout)
+		return;
+
+	frameTimeout = time + FRAME_DURATION;
+
 	mode->refresh();
 	auto pixels = mode->getPixels();
 	
@@ -39,4 +44,8 @@ void LEDManager::refresh(Mode *mode) {
 
 void LEDManager::setBrightness(uint8_t brightness) {
 	FastLED.setBrightness(brightness);
+}
+
+void clear() {
+	FastLED.clear(true);
 }

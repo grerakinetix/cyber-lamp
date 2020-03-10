@@ -9,13 +9,15 @@ class Mode;
 class Controller {
 	ButtonsManager buttonsManager;
 	LEDManager ledManager;
-	Mode *currentMode;
-	ModeID currentModeID;
+	Mode *mode;
+	uint8_t modeID;
+	Transition *transition;
 	SmoothValue<uint8_t, SineEase> brightness;
 	SmoothValue<uint8_t, SineEase> speed;
 	SmoothValue<uint8_t, SineEase> scale;
 	uint64_t switchTimeout;
-	bool power = false;
+	bool power;
+	bool poweringOff;
 
 	void parseInstruction(Instruction);
 

@@ -2,6 +2,24 @@
 
 // Settings
 #define BUTTONS_QUANTITY    5
+
+// Pins
+#define LED_PIN             2
+#define BUTTON_PINS         {4, 12, 13, 14, 15}        // Center, up, down, right, left
+
+// Matrix
+#define WIDTH               16
+#define HEIGHT              16
+#define BRIGHTNESS_LIMIT    150
+#define CURRENT_LIMIT       2000
+#define COLOR_ORDER         GRB
+#define MATRIX_TYPE         0
+#define CONNECTION_ANGLE    0
+#define STRIP_DIRECTION     0
+
+// *** DEVELOPER ZONE ***
+
+// Developer settings
 #define FPS                 60
 
 // Buttons
@@ -11,20 +29,32 @@
 #define RIGHT               3
 #define LEFT                4
 
-// Pins
-#define LED_PIN             2
-#define BUTTON_PINS         {4, 12, 13, 14, 15}        // Center, up, down, right, left
+// Modes
+enum ModeID {
+    WHITE_LIGHT,
+    SPARKLES,
+    LAST_MODE
+};
 
-// Matrix
-#define WIDTH               16
-#define HEIGHT              16
-#define LEDS_QUANTITY       WIDTH * HEIGHT
-#define BRIGHTNESS_LIMIT    150
-#define CURRENT_LIMIT       2000
-#define COLOR_ORDER         GRB
-#define MATRIX_TYPE         0
-#define CONNECTION_ANGLE    0
-#define STRIP_DIRECTION     0
+// White Light
+#define LOWER_TEMP          2000.
+#define UPPER_TEMP          4500.
+
+// Transitions
+#define SCATTERED_SHADE
+
+// Instructions for controller
+typedef enum controller_instructions {
+    SWITCH_POWER,
+    NEXT_MODE,
+    PREVIOUS_MODE,
+    INCREASE_BRIGHTNESS,
+    DECREASE_BRIGHTNESS,
+    INCREASE_SPEED,
+    DECREASE_SPEED,
+    INCREASE_SCALE,
+    DECREASE_SCALE
+} Instruction;
 
 // Coordinate system according to configuration
 #if (CONNECTION_ANGLE == 0 || CONNECTION_ANGLE == 1)
@@ -49,28 +79,6 @@
 #define ROW _POSITION
 #endif
 
-// Modes
-typedef enum mode_id {
-    WHITE_LIGHT,
-    SPARKLES
-} ModeID;
-
-// White Light
-#define LOWER_TEMP          2000.
-#define UPPER_TEMP          4500.
-
-// Transitions
-#define SCATTERED_SHADE
-
-// Instructions for controller
-typedef enum controller_instructions {
-    SWITCH_POWER,
-    NEXT_MODE,
-    PREVIOUS_MODE,
-    INCREASE_BRIGHTNESS,
-    DECREASE_BRIGHTNESS,
-    INCREASE_SPEED,
-    DECREASE_SPEED,
-    INCREASE_SCALE,
-    DECREASE_SCALE
-} Instruction;
+// Common expressions
+#define LEDS_QUANTITY       WIDTH * HEIGHT
+#define FRAME_DURATION      (1000 / FPS)

@@ -7,8 +7,7 @@ class Transition : public Mode {
   protected:
 	Mode *from, *to;
 	EasingBase *easingMethod;
-	const uint64_t beginTime;
-	const uint16_t duration;
+	const uint64_t timeout;
 
   public:
 	Transition(Mode *, Mode *, uint16_t, EasingBase *);
