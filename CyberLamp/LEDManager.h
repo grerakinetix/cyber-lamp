@@ -4,7 +4,6 @@
 #include <EasingLibrary.h>
 #include <FastLED.h>
 
-class Transition;
 class Mode;
 
 class LEDManagerClass {

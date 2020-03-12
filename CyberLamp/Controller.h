@@ -7,6 +7,7 @@
 #include <EEPROM.h>
 
 class Mode;
+class Transition;
 
 class ControllerClass {
 	ButtonsManagerClass ButtonsManager;

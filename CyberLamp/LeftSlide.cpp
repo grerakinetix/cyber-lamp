@@ -4,11 +4,11 @@
 
 #include <Arduino.h>
 
-class CenterSlide : public Transition {
+class LeftSlide : public Transition {
 	double previousOffset;
 
   public:
-	CenterSlide(Mode *from, Mode *to, uint16_t duration, EasingBase *smoother)
+	LeftSlide(Mode *from, Mode *to, uint16_t duration, EasingBase *smoother)
 	    : Transition(from, to, duration, smoother), previousOffset(0) {}
 
 	void refresh() {
@@ -26,48 +26,45 @@ class CenterSlide : public Transition {
 		}
 
 		double value = 255.0 - smoother->easeInOut(timeout - time);
+		double offset = value / 255.0 * WIDTH;
+		uint16_t halfOffset = round(offset / 2);
 
 		// Source mode
 		if (from != nullptr) {
 			auto source = from->getPixels();
 
-			for (uint16_t x = 0; x < WIDTH; ++x) {
-				for (uint16_t y = 0; y < HEIGHT; ++y) {
-					pixels[y][x] = source[y][x];
+            for (uint16_t x = round(offset); x < WIDTH; ++x) {
+			    for (uint16_t y = 0; y < HEIGHT; ++y) {
+					pixels[y][x] = source[y][x - halfOffset];
 					pixels[y][x].fadeToBlackBy(value);
 				}
 			}
 		}
 
 		// Destination mode
-		double offset = value / 255.0 * half(WIDTH);
-		uint16_t leftMargin = half(WIDTH) - round(offset);
-		uint16_t rightMargin = WIDTH / 2 + round(offset);
-
 		if (to != nullptr) {
 			auto destination = to->getPixels();
 
-			for (uint16_t x = leftMargin; x <= rightMargin; ++x) {
-				for (uint16_t y = 0; y < HEIGHT; ++y) {
-					pixels[y][x] = destination[y][x];
+            for (uint16_t x = 0; x < offset; ++x) {
+			    for (uint16_t y = 0; y < HEIGHT; ++y) {
+					pixels[y][x] = destination[y][x - halfOffset + half(WIDTH)];
 					pixels[y][x].fadeToBlackBy(255 - value);
 				}
 			}
 		} else {
-			for (uint16_t x = leftMargin; x <= rightMargin; ++x) {
-				for (uint16_t y = 0; y < HEIGHT; ++y) {
+            for (uint16_t x = 0; x < offset; ++x) {
+			    for (uint16_t y = 0; y < HEIGHT; ++y) {
 					pixels[y][x].setColorCode(CRGB::Black);
 				}
 			}
 		}
 
-		// White stripes
+		// White stripe
 		for (uint16_t y = 0; y < HEIGHT; ++y) {
-			pixels[y][leftMargin].setColorCode(CRGB::White);
-			pixels[y][rightMargin].setColorCode(CRGB::White);
+			pixels[y][(uint16_t)offset].setColorCode(CRGB::White);
 		}
 
-		// White shades
+		// White shade
 		LinearEase shade;
 		shade.setDuration(offset - previousOffset);
 		shade.setTotalChangeInPosition(255);
@@ -78,8 +75,7 @@ class CenterSlide : public Transition {
 #else
 				uint8_t shadeValue = 255 - shade.easeInOut(dist);
 #endif
-				pixels[y][leftMargin + dist].addToRGB(shadeValue);
-				pixels[y][rightMargin - dist].addToRGB(shadeValue);
+				pixels[y][(uint16_t)offset - dist].addToRGB(shadeValue);
 			}
 		}
 

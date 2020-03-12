@@ -23,7 +23,7 @@ ControllerClass::ControllerClass()
     , speed(DEFAULT_SPEED)
     , scale(DEFAULT_SCALE)
     , switchTimeout(0)
-    , eepromTimeout(millis() + 3000)
+    , eepromTimeout(millis() + EEPROM_FLASH_INTERVAL)
     , power(false)
     , poweringOff(false) {
 	EEPROM.begin(EEPROM_SIZE);
@@ -152,18 +152,18 @@ void ControllerClass::switchPower() {
 		return;
 
 	transition = (power) ?
-	    new CenterSlide(mode, nullptr, 1000, new CubicEase()) :
+	    new CenterSlide(mode, nullptr, ANIMATION_DURATION, new CubicEase()) :
 	    new CenterSlide(
 	        nullptr,
 	        initMode(modeID, scale.getSmoothValue(), speed.getSmoothValue()),
-	        1000, new CubicEase());
+	        ANIMATION_DURATION, new CubicEase());
 	mode = transition;
 
 	if (power)
 		poweringOff = true;
 
 	power = true;
-	switchTimeout = millis() + 1000;
+	switchTimeout = millis() + ANIMATION_DURATION;
 }
 
 bool ControllerClass::poweredON() { return power; }
@@ -175,12 +175,11 @@ void ControllerClass::nextMode() {
 	modeID = (modeID + 1) % LAST_MODE;
 	speed.setValue(EEPROM.read(modeAddress(modeID)), 0);
 	scale.setValue(EEPROM.read(modeAddress(modeID) + 1), 0);
-	// TODO: Change transition to LeftSlide
-	transition = new CenterSlide(
+	transition = new LeftSlide(
 	    mode, initMode(modeID, scale.getSmoothValue(), speed.getSmoothValue()),
-	    1000, new CubicEase());
+	    ANIMATION_DURATION, new CubicEase());
 	mode = transition;
-	switchTimeout = millis() + 1000;
+	switchTimeout = millis() + ANIMATION_DURATION;
 }
 
 void ControllerClass::previousMode() {
@@ -190,12 +189,11 @@ void ControllerClass::previousMode() {
 	modeID = (modeID - 1 + LAST_MODE) % LAST_MODE;
 	speed.setValue(EEPROM.read(modeAddress(modeID)), 0);
 	scale.setValue(EEPROM.read(modeAddress(modeID) + 1), 0);
-	// TODO: Change transition to RightSlide
-	transition = new CenterSlide(
+	transition = new RightSlide(
 	    mode, initMode(modeID, scale.getSmoothValue(), speed.getSmoothValue()),
-	    1000, new CubicEase());
+	    ANIMATION_DURATION, new CubicEase());
 	mode = transition;
-	switchTimeout = millis() + 1000;
+	switchTimeout = millis() + ANIMATION_DURATION;
 }
 
 void ControllerClass::increaseBrightness() {

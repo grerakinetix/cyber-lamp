@@ -43,7 +43,7 @@ class WhiteLight : public Mode {
 	}
 
   public:
-	WhiteLight(uint8_t scale, uint8_t speed) : Mode(scale, speed) { draw(); }
+	WhiteLight(uint8_t speed, uint8_t scale) : Mode(speed, scale) { draw(); }
 
 	void setScale(uint8_t newScale) {
 		Mode::setScale(newScale);

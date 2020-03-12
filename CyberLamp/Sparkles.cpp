@@ -9,7 +9,7 @@ class Sparkles : public Mode {
 	std::list<CRGB *> fadingList;
 
   public:
-	Sparkles(uint8_t scale = 128, uint8_t speed = 128) : Mode(scale, speed) {
+	Sparkles(uint8_t speed = DEFAULT_SPEED, uint8_t scale = DEFAULT_SCALE) : Mode(speed, scale) {
 		for (int i = 0; i < HEIGHT; ++i)
 			for (int j = 0; j < WIDTH; ++j)
 				pixels[i][j].setRGB(0, 0, 0);

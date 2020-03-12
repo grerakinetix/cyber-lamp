@@ -14,7 +14,7 @@ class SmoothValue {
 	SmoothValue(T);
     T getValue();
 	T getSmoothValue();
-	void setValue(T, int = 1000);
+	void setValue(T, int = ANIMATION_DURATION);
 	bool isChanging();
 };
 

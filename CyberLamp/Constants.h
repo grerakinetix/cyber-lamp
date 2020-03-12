@@ -24,6 +24,7 @@
 
 // Developer settings
 #define FPS                     60
+#define ANIMATION_DURATION      1000
 
 // Buttons
 #define CENTER                  0
@@ -97,6 +98,7 @@ typedef enum controller_instructions {
 // Common expressions
 #define LEDS_QUANTITY           WIDTH * HEIGHT
 #define FRAME_DURATION          (1000 / FPS)
+#define half(length)            (length / 2 - ((length % 2 == 0) ? 1 : 0))
 #define modeAddress(modeID)     FIRST_MODE_ADDRESS + modeID * MODE_SIZE
 
 // Miscellaneous

@@ -3,20 +3,20 @@
 #include <Arduino.h>
 
 Transition::Transition(Mode *from, Mode *to, uint16_t duration,
-                       EasingBase *easingMethod)
+                       EasingBase *snoother)
     : Mode(0, 0)
     , from(from)
     , to(to)
-    , easingMethod(easingMethod)
+    , smoother(smoother)
     , timeout(millis() + duration) {
-	easingMethod->setDuration(duration);
-	easingMethod->setTotalChangeInPosition(255);
+	this->smoother->setDuration(duration);
+	this->smoother->setTotalChangeInPosition(255);
 }
 
 CRGB const (&Transition::getPixels())[HEIGHT][WIDTH] {
-    if (to != nullptr && millis() > timeout)
-        return to->getPixels();
-    return pixels;
+	if (to != nullptr && millis() > timeout)
+		return to->getPixels();
+	return pixels;
 }
 
 void Transition::setSpeed(uint8_t newSpeed) { to->setSpeed(newSpeed); }

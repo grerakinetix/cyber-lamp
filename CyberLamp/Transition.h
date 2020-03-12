@@ -6,7 +6,7 @@
 class Transition : public Mode {
   protected:
 	Mode *from, *to;
-	EasingBase *easingMethod;
+	EasingBase *smoother;
 	const uint64_t timeout;
 
   public:

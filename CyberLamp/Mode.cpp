@@ -1,6 +1,6 @@
 #include "Mode.h"
 
-Mode::Mode(uint8_t scale, uint8_t speed) : scale(scale), speed(speed) {}
+Mode::Mode(uint8_t speed, uint8_t scale) : speed(speed), scale(scale) {}
 
 CRGB const (&Mode::getPixels())[HEIGHT][WIDTH] { return pixels; }
 
