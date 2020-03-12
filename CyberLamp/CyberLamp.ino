@@ -3,7 +3,7 @@
 
 #include <ESP8266WiFi.h>
 
-Controller controller;
+ControllerClass Controller;
 
 char logo[] PROGMEM = R"(
  ________      ___    ___ ________  _______   ________                 ___       ________  _____ ______   ________   
@@ -23,5 +23,5 @@ void setup() {
 }
 
 void loop() {
-    controller.tick();
+    Controller.tick();
 }

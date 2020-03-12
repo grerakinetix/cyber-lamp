@@ -4,12 +4,12 @@
 #include <GyverButton.h>
 #include <queue>
 
-class ButtonsManager {
+class ButtonsManagerClass {
 	GButton *buttons[BUTTONS_QUANTITY];
 	std::queue<Instruction> pendingOps;
 
   public:
-	ButtonsManager();
+	ButtonsManagerClass();
 	void tick();
 	std::queue<Instruction> &getPendingOps();
 };

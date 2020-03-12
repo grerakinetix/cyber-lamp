@@ -13,4 +13,16 @@ Transition::Transition(Mode *from, Mode *to, uint16_t duration,
 	easingMethod->setTotalChangeInPosition(255);
 }
 
+CRGB const (&Transition::getPixels())[HEIGHT][WIDTH] {
+    if (to != nullptr && millis() > timeout)
+        return to->getPixels();
+    return pixels;
+}
+
+void Transition::setSpeed(uint8_t newSpeed) { to->setSpeed(newSpeed); }
+
+void Transition::setScale(uint8_t newSpeed) { to->setScale(newSpeed); }
+
+Mode *Transition::getSourceMode() { return from; }
+
 Mode *Transition::getDestinationMode() { return to; }

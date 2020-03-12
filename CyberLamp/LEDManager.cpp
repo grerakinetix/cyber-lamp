@@ -5,7 +5,7 @@
 
 #include <Arduino.h>
 
-LEDManager::LEDManager() : frameTimeout(millis() + FRAME_DURATION) {
+LEDManagerClass::LEDManagerClass() : frameTimeout(millis() + FRAME_DURATION) {
 	FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, LEDS_QUANTITY);
 #if (CURRENT_LIMIT > 0)
 	FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
@@ -17,15 +17,18 @@ LEDManager::LEDManager() : frameTimeout(millis() + FRAME_DURATION) {
 
 inline uint32_t getPixelNumber(uint16_t x, uint16_t y) {
 #if (MATRIX_TYPE == 1)
-	return ROW * LENGTH + POSITION;
+	return row(x, y) * ROW_LENGTH + position(x, y);
 #else
-	if (ROW % 2 == 0)
-		return ROW * LENGTH + POSITION;
-	return ROW * LENGTH + LENGTH - POSITION - 1;
+	if (row(x, y) % 2 == 0)
+		return row(x, y) * ROW_LENGTH + position(x, y);
+	return row(x, y) * ROW_LENGTH + ROW_LENGTH - 1 - position(x, y);
 #endif
 }
 
-void LEDManager::refresh(Mode *mode) {
+void LEDManagerClass::refresh(Mode *mode) {
+	if (mode == nullptr)
+		return;
+
 	uint64_t time = millis();
 	if (time < frameTimeout)
 		return;
@@ -42,10 +45,10 @@ void LEDManager::refresh(Mode *mode) {
 	FastLED.show();
 }
 
-void LEDManager::setBrightness(uint8_t brightness) {
+void LEDManagerClass::setBrightness(uint8_t brightness) {
 	FastLED.setBrightness(brightness);
 }
 
-void clear() {
+void LEDManagerClass::clear() {
 	FastLED.clear(true);
 }

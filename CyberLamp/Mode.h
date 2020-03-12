@@ -11,8 +11,8 @@ class Mode {
 
   public:
 	Mode(uint8_t scale, uint8_t speed);
-	virtual CRGB const (&getPixels())[HEIGHT][WIDTH] { return pixels; };
-	virtual void setScale(uint8_t newScale);
-	virtual void setSpeed(uint8_t newSpeed);
+	virtual CRGB const (&getPixels())[HEIGHT][WIDTH];
+	virtual void setSpeed(uint8_t);
+	virtual void setScale(uint8_t);
 	virtual void refresh() = 0;
 };

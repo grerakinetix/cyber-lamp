@@ -7,12 +7,12 @@
 class Transition;
 class Mode;
 
-class LEDManager {
+class LEDManagerClass {
 	CRGB leds[LEDS_QUANTITY];
 	uint64_t frameTimeout;
 
   public:
-	LEDManager();
+	LEDManagerClass();
 	void refresh(Mode *);
 	void setBrightness(uint8_t);
 	void clear();

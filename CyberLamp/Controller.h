@@ -4,11 +4,13 @@
 #include "LEDManager.h"
 #include "SmoothValue.h"
 
+#include <EEPROM.h>
+
 class Mode;
 
-class Controller {
-	ButtonsManager buttonsManager;
-	LEDManager ledManager;
+class ControllerClass {
+	ButtonsManagerClass ButtonsManager;
+	LEDManagerClass LEDManager;
 	Mode *mode;
 	uint8_t modeID;
 	Transition *transition;
@@ -16,13 +18,17 @@ class Controller {
 	SmoothValue<uint8_t, SineEase> speed;
 	SmoothValue<uint8_t, SineEase> scale;
 	uint64_t switchTimeout;
+	uint64_t eepromTimeout;
 	bool power;
 	bool poweringOff;
 
+	bool checkEEPROM();
+	void restoreState();
+	void saveState();
 	void parseInstruction(Instruction);
 
   public:
-	Controller();
+	ControllerClass();
 	void tick();
 	void switchPower();
 	bool poweredON();

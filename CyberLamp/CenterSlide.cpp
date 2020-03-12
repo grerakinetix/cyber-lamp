@@ -12,12 +12,6 @@ class CenterSlide : public Transition {
 	            EasingBase *easingMethod)
 	    : Transition(from, to, duration, easingMethod), previousOffset(0) {}
 
-	CRGB const (&getPixels())[HEIGHT][WIDTH] {
-		if (to != nullptr && millis() > timeout)
-			return to->getPixels();
-		return pixels;
-	}
-
 	void refresh() {
 		if (from != nullptr)
 			from->refresh();

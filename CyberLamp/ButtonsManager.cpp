@@ -1,15 +1,15 @@
 #include "ButtonsManager.h"
 
-ButtonsManager::ButtonsManager() {
+ButtonsManagerClass::ButtonsManagerClass() {
 	uint8_t pins[BUTTONS_QUANTITY] = BUTTON_PINS;
 	for (int i = 0; i < BUTTONS_QUANTITY; ++i) {
 		buttons[i] = new GButton(pins[i], LOW_PULL, NORM_OPEN);
-		buttons[i]->setStepTimeout(100);
+		buttons[i]->setStepTimeout(250);
 		buttons[i]->setClickTimeout(500);
 	}
 }
 
-void ButtonsManager::tick() {
+void ButtonsManagerClass::tick() {
 	for (int i = 0; i < BUTTONS_QUANTITY; ++i)
 		buttons[i]->tick();
 
@@ -49,6 +49,6 @@ void ButtonsManager::tick() {
 #endif
 }
 
-std::queue<Instruction> &ButtonsManager::getPendingOps() {
+std::queue<Instruction> &ButtonsManagerClass::getPendingOps() {
 	return pendingOps;
 }

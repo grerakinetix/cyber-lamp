@@ -44,6 +44,9 @@ T SmoothValue<T, K>::getSmoothValue() {
 
 template <class T, class K>
 void SmoothValue<T, K>::setValue(T newValue, int duration) {
+    if (value == newValue)
+        return;
+        
     smoother.setDuration(duration);
     smoother.setTotalChangeInPosition(newValue - value);
     value = newValue;
